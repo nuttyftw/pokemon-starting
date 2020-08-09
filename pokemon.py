@@ -54,4 +54,12 @@ class Pokemon:
         if (self.type == other_pokemon.type):
             other_pokemon.lost_health(damage)
             print("{attacker_name} attakced {defense_name} for " + damage + " damage.".format(attacker_name = self.name, defense_name = other_pokemon.name))
-    
+
+class Trainer:
+    # A Trainer has a name, a list of pokemon, and potions to heal their pokemon.
+    # When the Trainer is created, the first pokemon in their list (number 0) is marked as active.
+    def __init__(self, pokemon_list, name, number_of_potions):
+        self.pokemons = pokemon_list
+        self.name = name
+        self.potions = number_of_potions
+        self.current_pokemon = 0
