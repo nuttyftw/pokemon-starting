@@ -1,12 +1,19 @@
 class Pokemon:
     # Create a Pokemon. Give it a name, level, type, maximum health determined by level), and if it's been knocked out.
-    def __init__(self, name, level, type, max_health, current_health, knocked_out):
+    def __init__(self, name, type, level):
         self.name = name
         self.level = level
         self.type = type
-        self.max_health = max_health
-        self.current_health = current_health
-        self.knocked_out = knocked_out
+        # Max helath is 5 times the pokemon's level.
+        self.max_health = level * 5
+        # Pokemon starts at max health.
+        self.current_health = level * 5
+        # Pokemon starts out conscious and in the fight
+        self.knocked_out = False
+
+    # Let's print out the pokemon's details.
+    def __repr__(self):
+        return "This Level {level} {name} has {health} hit points remaining. {name} is a {type}-type Pokemon.".format(level = self.level, name = self.name, health = self.current_health, type = self.type)
 
     # Deduct health when a pokemon takes damage.
     def lose_heatlh(self, damage):
@@ -55,11 +62,68 @@ class Pokemon:
             other_pokemon.lost_health(damage)
             print("{attacker_name} attakced {defense_name} for " + damage + " damage.".format(attacker_name = self.name, defense_name = other_pokemon.name))
 
+# Let's make three pokemon. One each of Fire, Grass, and Water.
+# These are subclasses of Pokemon.
+# By default, they will be at Level 5.
+class Charmander(Pokemon):
+    def __init__(self, level = 5):
+        super().__init__("Charmander", "Fire", level)
+
+class Squirtle(Pokemon):
+    def __init__(self, level = 5):
+        super().__init__("Squirtle", "Water", level)
+
+class Bulbasaur(Pokemon):
+    def __init__(self, level = 5):
+        super().__init__("Bulbasaur", "Grass", level)
+
 class Trainer:
     # A Trainer has a name, a list of pokemon, and potions to heal their pokemon.
     # When the Trainer is created, the first pokemon in their list (number 0) is marked as active.
-    def __init__(self, pokemon_list, name, number_of_potions):
+    def __init__(self, name, pokemon_list, number_of_potions):
         self.pokemons = pokemon_list
         self.name = name
         self.potions = number_of_potions
         self.current_pokemon = 0
+
+    # Print out the details of a trainer.
+    def __repr__(self):
+        print("{name} has the following pokemon: ".format(name = self.name))
+        for pokemon in self.pokemons:
+            print(pokemon)
+        return "{pokemon} is currently active.".format(pokemon = self.pokemons[self.current_pokemon].name)
+    
+    # A Trainer gives a potion to their pokemon.
+    def use_potion(self):
+        if self.potions > 0:
+            self.pokemons[self.current_pokemon].gain_health(20)
+            self.potions -= 1
+            print("{name} just drank a potion. You know have {potions} left.".format(name = self.pokemons[self.current_pokemon].name, potions = self.potions))
+        else:
+            print("Oh no! You are out of potions!")
+
+    # Attack a trainer
+    def launch_attack(self, other_trainer):
+        my_pokemon = self.pokemons[self.current_pokemon]
+        enemy_pokemon = other_trainer.pokemons[other_trainer.current_pokemon]
+        my_pokemon.attack(enemy_pokemon)
+
+    # Switch pokemon
+    def switch_pokemon(self, new_active):
+        self.current_pokemon = new_active
+        print("Go {name}, it's your turn!".format(name = self.pokemons[self.current_pokemon].name))
+
+# Make a set of variables for the six pokemon.
+poke_1 = Charmander()
+poke_2 = Charmander()
+poke_3 = Squirtle()
+poke_4 = Squirtle()
+poke_5 = Bulbasaur()
+poke_6 = Bulbasaur()
+
+# Make two trainers. Each has a list of pokemon, some potions, and a name.
+trainer_1 = Trainer("Blaine", [poke_1, poke_2, poke_3], 4)
+trainer_2 = Trainer("Misty", [poke_4, poke_5, poke_6], 6)
+
+print(trainer_1)
+print(trainer_2)
