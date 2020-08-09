@@ -1,6 +1,5 @@
 class Pokemon:
-    # Create a Pokemon. Give it a name, level, type, maximum health 
-    # (determined by level), and if it's been knocked out.
+    # Create a Pokemon. Give it a name, level, type, maximum health determined by level), and if it's been knocked out.
     def __init__(self, name, level, type, max_health, current_health, knocked_out):
         self.name = name
         self.level = level
@@ -37,6 +36,22 @@ class Pokemon:
         self.knocked_out = False
         print("Yay! {name} has been revived and is back in the fight!".format(name = self.name))
 
-    def attack(other_pokemon):
-        other_pokemon.lose_health(damage)
-        pass
+    def attack(self, other_pokemon):
+        damage = self.level
+        # If the attacking pokemon has advantage based on type, it deals damage equals to double it's level.
+        if (self.type == "Fire" and other_pokemon.type == "Grass") or (self.type == "Water" and other_pokemon.type == "Fire") or (self.type == "Grass" and other_pokemon.type == "Water"):
+            damage = damage * 2
+            other_pokemon.lose_health(damage)
+            print("{attacker_name} attakced {defense_name} for " + damage + " damage.".format(attacker_name = self.name, defense_name = other_pokemon.name))
+            print("It's super effective!")
+        # If the attacking pokemon has disadvantage based on type, it deals damage equal to one half it's level.
+        if (self.type == "Grass" and other_pokemon.type == "Fire") or (self.type == "Fire" and other_pokemon.type == "Water") or (self.type == "Water" and other_pokemon.type == "Grass"):
+            damage = damage / 2
+            other_pokemon.lose_health(damage)
+            print("{attacker_name} attakced {defense_name} for " + damage + " damage.".format(attacker_name = self.name, defense_name = other_pokemon.name))
+            print("It's not very effective!")
+        # If the attacking pokemon has neither advantage or disadvantage on type, it deals damage equal to it's level.
+        if (self.type == other_pokemon.type):
+            other_pokemon.lost_health(damage)
+            print("{attacker_name} attakced {defense_name} for " + damage + " damage.".format(attacker_name = self.name, defense_name = other_pokemon.name))
+    
