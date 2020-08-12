@@ -32,19 +32,32 @@ class Pokemon:
         if self.current_health == 0:
             self.revive()
         self.current_health += healing
+        # Make sure a pokemon can't be healed over it's max health
+        if self.current_health >= self.max_health:
+            self.current_health = self.max_health
         print("{name} now has {current_health} out of {max_health} health.".format(name = self.name, current_health = self.current_health, max_health = self.max_health))
 
-    # Statement for an unconscious pokemon.
+    # Function for an unconscious pokemon.
     def knock_out(self):
         self.knocked_out = True
+        # A knocked out pokemon can't have any health.
+        if self.current_health != 0:
+            self.current_health = 0
         print("Oh no! {name} has been knocked out!\n".format(name = self.name))
 
-    # State for reviving a pokemon.
+    # Function for reviving a pokemon.
     def revive(self):
-        self.knocked_out = False
+        self.knocked_out == False
+        # A revived pokemon can't have zero health.
+        if self.current_health == 0:
+            self.current_health = 1
         print("Yay! {name} has been revived and is back in the fight!".format(name = self.name))
 
     def attack(self, other_pokemon):
+        # Check if the pokemon is knocked out. If it is, it cannot attack.
+        if self.knocked_out == True:
+            print("{name} is knocked out and cannot attack!".format(name = self.name))
+            return
         # Base damage is equal to the pokemon's level.
         # If the attacking pokemon has advantage based on type, it deals damage equals to double it's level.
         if (self.type == "Fire" and other_pokemon.type == "Grass") or (self.type == "Water" and other_pokemon.type == "Fire") or (self.type == "Grass" and other_pokemon.type == "Water"):
@@ -112,22 +125,26 @@ class Trainer:
 
     # Switch pokemon
     def switch_pokemon(self, new_active):
-        self.current_pokemon = new_active
-        print("Go {name}, it's your turn!\n".format(name = self.pokemons[self.current_pokemon].name))
+        # Check if the switch is a valid number.
+        if new_active < len(self.pokemons) and new_active >= 0:
+            # Cannot to switch to a pokemon that is knocked out.
+            if self.pokemons[new_active].knocked_out = True:
+                print("{name} is knocked out! You can't switch to this pokemon.".format(name = self.pokemons[new_active].name))
+            # Can't switch to a pokemon that is already active
+            elif new_active == self.current_pokemon:
+                print("{name} is already your active pokemon.".format(name = self.pokemons[new_active].name))
+            # Make the switch
+            else:
+                self.current_pokemon = new_active
+                print("Go {name}, it's your turn!\n".format(name = self.pokemons[self.current_pokemon].name))
 
 # Make a set of variables for the six pokemon.
-#poke_1 = Charmander()
-#poke_2 = Charmander()
-#poke_3 = Squirtle()
-#poke_4 = Squirtle()
-#poke_5 = Bulbasaur()
-#poke_6 = Bulbasaur()
-
-poke_1 = Charmander()
-poke_2 = Squirtle()
-poke_3 = Squirtle()
-poke_4 = Bulbasaur()
-poke_5 = Charmander()
+# The level is given in the variable, if not given, default is Level 5.
+poke_1 = Charmander(7)
+poke_2 = Squirtle(6)
+poke_3 = Bulbasaur()
+poke_4 = Bulbasaur(8)
+poke_5 = Charmander(7)
 poke_6 = Squirtle()
 
 # Make two trainers. Each has a list of pokemon, some potions, and a name.
